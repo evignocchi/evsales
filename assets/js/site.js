@@ -24,9 +24,10 @@
   };
 
   // ---- Static config into the page
+  // until filled in, the LinkedIn links stay visible with a red "da inserire" note
   $$('[data-linkedin]').forEach(a => {
-    if (CONFIG.linkedin) a.href = CONFIG.linkedin;
-    else a.closest('li') ? a.closest('li').remove() : a.remove();
+    if (CONFIG.linkedin) { a.href = CONFIG.linkedin; $$('[data-todo]', a).forEach(n => n.remove()); }
+    else a.addEventListener('click', e => e.preventDefault());
   });
   if (CONFIG.piva) $$('[data-piva]').forEach(n => { n.textContent = CONFIG.piva; });
   const y = $('#year'); if (y) y.textContent = new Date().getFullYear();
@@ -116,7 +117,7 @@
       const t = ease(clamp((p - start) / 0.28));
       // drift a little while still scattered
       const drift = Math.sin((p * 6) + f.i) * 6 * (1 - t);
-      const sx = (f.fx / 100) * f.bw - f.box.w / 2 + (small ? 0 : f.box.w * 0.2);
+      const sx = clamp((f.fx / 100) * f.bw - f.box.w / 2 + (small ? 0 : f.box.w * 0.2), 0, f.bw - f.box.w);
       const sy = (f.fy / 100) * f.bh;
       const x = sx + (f.box.x - sx) * t;
       const yv = sy + (f.box.y - sy) * t + drift;
@@ -382,7 +383,11 @@
   const banner = $('#cookie');
   function setConsent(v) { store.set('ev-consent', v); banner.classList.remove('on'); }
   if (banner) {
-    if (!store.get('ev-consent')) setTimeout(() => banner.classList.add('on'), 1200);
+    // shown after the first scroll, so it never covers the first viewport
+    if (!store.get('ev-consent')) {
+      const show = () => { if (window.scrollY > 200) { banner.classList.add('on'); window.removeEventListener('scroll', show); } };
+      window.addEventListener('scroll', show, { passive: true });
+    }
     $$('[data-consent]', banner).forEach(b => b.addEventListener('click', () => {
       setConsent(b.dataset.consent);
       if (b.dataset.consent === 'yes') document.dispatchEvent(new Event('ev-consent'));
