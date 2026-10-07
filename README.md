@@ -4,7 +4,8 @@ Sito di Enea Vignocchi per piccole aziende, con due pagine sullo stesso design:
 
 - `/` (index.html): vendite e CRM. Processo commerciale prima, CRM dopo.
 - `/ops` (ops.html): processi e operazioni. Consulenza per capire dove si perde tempo, poi un applicativo su misura che raccoglie le informazioni aziendali in un posto solo.
- HTML, CSS e JavaScript statici, senza build: si pubblica così com'è su Cloudflare Pages.
+
+HTML, CSS e JavaScript statici, senza build: si pubblica così com'è su Cloudflare Pages.
 
 ## Struttura
 
@@ -29,7 +30,7 @@ PRODUCT.md            contesto di prodotto (usato dalla skill impeccable)
 2. **CONFIG** in `assets/js/site.js`:
    - `calLink`: l'evento Cal.com, es. `enea-vignocchi/45min` (crea un evento da 45 minuti con videochiamata).
      Per usare un evento diverso sulla pagina ops, metti `data-cal="enea-vignocchi/45min-ops"` sul `<form id="lead">` di `ops.html`.
-   - `linkedin`: URL del profilo. Finché è vuoto, i link LinkedIn spariscono.
+   - `linkedin`: URL del profilo. Finché è vuoto, i link LinkedIn mostrano una nota rossa "da inserire".
    - `piva`: Partita IVA (sostituisce "da inserire" nel footer).
    - `hubspot.portalId` / `formGuid` (facoltativo): le risposte del form finiscono anche in HubSpot.
 3. **Privacy**: completa i campi tra `[ ]` in `privacy.html` e togli il riquadro "Bozza".
