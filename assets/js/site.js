@@ -153,13 +153,10 @@
 
   // ---- Automation feed
   const feed = $('#feed');
-  const FEED = [
-    { ico: 'i-bell', b: 'Promemoria a Marco', s: 'Elettrica Ferri: preventivo senza risposta da 3 giorni', t: '09:00' },
-    { ico: 'i-user', b: 'Nuovo contatto assegnato a Laura', s: 'Richiesta dal sito, zona Parma', t: '09:14' },
-    { ico: 'i-clock', b: 'Attività per Paolo', s: 'Gatti Costruzioni fermo da 60 giorni: richiamare', t: '10:02' },
-    { ico: 'i-mail', b: 'Riepilogo del lunedì inviato', s: '5 clienti da richiamare, 2 preventivi fermi', t: '07:30' },
-  ];
-  if (feed) {
+  // each page lists its own automations in <script type="application/json" id="feed-data">
+  let FEED = [];
+  try { FEED = JSON.parse($('#feed-data').textContent); } catch { /* no feed on this page */ }
+  if (feed && FEED.length) {
     const make = (it) => {
       const d = document.createElement('div');
       d.className = 'feed__item';
@@ -230,13 +227,20 @@
     const err = $('#err');
     let cur = 1;
     const last = steps.length;
+    // a page can book a different Cal.com event with data-cal on the form
+    const calLink = form.dataset.cal || CONFIG.calLink;
 
     const values = () => {
       const fd = new FormData(form);
+      // answers of the question steps, labelled by each fieldset's data-label
+      const answers = steps.filter(st => st.dataset.label).map(st => {
+        const picked = $$('input:checked', st).map(i => i.value);
+        $$('input[type="text"]', st).forEach(i => { if (i.value.trim()) picked.push(i.value.trim()); });
+        return [st.dataset.label, picked];
+      });
       return {
+        answers,
         team: fd.get('team') || '',
-        contatti: fd.getAll('contatti'),
-        strumenti: fd.getAll('strumenti').concat(fd.get('altro') ? [fd.get('altro')] : []),
         nome: (fd.get('nome') || '').trim(),
         azienda: (fd.get('azienda') || '').trim(),
         email: (fd.get('email') || '').trim(),
@@ -246,9 +250,8 @@
     };
 
     const canGo = () => {
-      const v = values();
-      if (cur === 1) return !!v.team;
-      if (cur === 2) return v.contatti.length > 0;
+      const st = steps[cur - 1];
+      if (st.hasAttribute('data-required')) return $$('input:checked', st).length > 0;
       return true;
     };
     const refresh = () => { next.disabled = !canGo(); };
@@ -321,24 +324,21 @@
 
     // ---- Cal.com
     function summaryText(v) {
-      return [
-        `Persone in vendita: ${v.team}`,
-        `Contatti oggi: ${v.contatti.join(', ') || 'non indicato'}`,
-        `Strumenti: ${v.strumenti.join(', ') || 'non indicato'}`,
-        v.telefono ? `Telefono: ${v.telefono}` : '',
-      ].filter(Boolean).join('\n');
+      return v.answers.map(([k, val]) => `${k}: ${val.join(', ') || 'non indicato'}`)
+        .concat(v.azienda ? [`Azienda: ${v.azienda}`] : [], v.telefono ? [`Telefono: ${v.telefono}`] : [])
+        .join('\n');
     }
     function openCal() {
       const v = values();
       const sum = $('#summary');
       sum.innerHTML = '';
-      [['Persone in vendita', v.team], ['Contatti oggi', v.contatti.join(', ')], ['Strumenti', v.strumenti.join(', ') || 'nessuno indicato']].forEach(([k, val]) => {
+      v.answers.forEach(([k, val]) => {
         const p = document.createElement('p'); const b = document.createElement('b');
-        b.textContent = `${k}: `; p.appendChild(b); p.appendChild(document.createTextNode(val)); sum.appendChild(p);
+        b.textContent = `${k}: `; p.appendChild(b); p.appendChild(document.createTextNode(val.join(', ') || 'non indicato')); sum.appendChild(p);
       });
       const box = $('#cal');
-      const direct = CONFIG.calLink ? `${CONFIG.calOrigin}/${CONFIG.calLink}?name=${encodeURIComponent(v.nome)}&email=${encodeURIComponent(v.email)}&notes=${encodeURIComponent(summaryText(v))}` : '';
-      if (!CONFIG.calLink) {
+      const direct = calLink ? `${CONFIG.calOrigin}/${calLink}?name=${encodeURIComponent(v.nome)}&email=${encodeURIComponent(v.email)}&notes=${encodeURIComponent(summaryText(v))}` : '';
+      if (!calLink) {
         box.innerHTML = '<div class="cal__gate"><p><b>Il calendario non è ancora collegato.</b> Ho ricevuto le tue risposte qui sopra: appena il sito è online qui scegli giorno e ora.</p></div>';
         return;
       }
@@ -356,7 +356,7 @@
       window.Cal('init', 'ev45', { origin: CONFIG.calOrigin });
       window.Cal.ns.ev45('inline', {
         elementOrSelector: '#cal-inline',
-        calLink: CONFIG.calLink,
+        calLink,
         config: { layout: 'month_view', name: v.nome, email: v.email, notes: summaryText(v) },
       });
       window.Cal.ns.ev45('ui', { theme: 'light', hideEventTypeDetails: false, layout: 'month_view', cssVarsPerTheme: { light: { 'cal-brand': '#2348f2' } } });

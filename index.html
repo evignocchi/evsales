@@ -257,6 +257,12 @@
         <h3>Automazioni che fanno il lavoro noioso al posto tuo</h3>
         <p>Niente sistemi complicati. Promemoria, follow-up e assegnazione dei contatti: le cose che oggi qualcuno dimentica.</p>
         <div class="feed" id="feed" aria-live="off"></div>
+        <script type="application/json" id="feed-data">[
+          {"ico": "i-bell", "b": "Promemoria a Marco", "s": "Elettrica Ferri: preventivo senza risposta da 3 giorni", "t": "09:00"},
+          {"ico": "i-user", "b": "Nuovo contatto assegnato a Laura", "s": "Richiesta dal sito, zona Parma", "t": "09:14"},
+          {"ico": "i-clock", "b": "Attività per Paolo", "s": "Gatti Costruzioni fermo da 60 giorni: richiamare", "t": "10:02"},
+          {"ico": "i-mail", "b": "Riepilogo del lunedì inviato", "s": "5 clienti da richiamare, 2 preventivi fermi", "t": "07:30"}
+        ]</script>
       </div>
       <div class="pane pane--gray b-train" data-light data-reveal>
         <h3>Formazione con i vostri dati, e un manuale breve</h3>
@@ -479,7 +485,7 @@
         <div class="progress" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></div>
         <p class="progress-label" id="progress-label">Passo 1 di 5</p>
         <form id="lead" novalidate>
-          <fieldset class="fstep on" data-step="1">
+          <fieldset class="fstep on" data-step="1" data-label="Persone in vendita" data-required>
             <legend>Quante persone si occupano di vendita da voi?</legend>
             <div class="opts">
               <label class="opt"><input type="radio" name="team" value="Solo io"><span>Solo io</span></label>
@@ -488,7 +494,7 @@
               <label class="opt"><input type="radio" name="team" value="Più di 15"><span>Più di 15</span></label>
             </div>
           </fieldset>
-          <fieldset class="fstep" data-step="2">
+          <fieldset class="fstep" data-step="2" data-label="Contatti oggi" data-required>
             <legend>Dove tenete i contatti dei clienti oggi?</legend>
             <p class="hint">Scegli tutto quello che vale.</p>
             <div class="opts">
@@ -500,7 +506,7 @@
               <label class="opt"><input type="checkbox" name="contatti" value="Già in un CRM"><span>Già in un CRM</span></label>
             </div>
           </fieldset>
-          <fieldset class="fstep" data-step="3">
+          <fieldset class="fstep" data-step="3" data-label="Strumenti">
             <legend>Che strumenti usate per vendere?</legend>
             <p class="hint">Gestionale, CRM, fogli condivisi. Va bene anche "nessuno".</p>
             <div class="opts">
@@ -549,7 +555,7 @@
       </div>
       <div>
         <h3>Sul sito</h3>
-        <ul><li><a href="#metodo">Il metodo</a></li><li><a href="#esempio">Un esempio</a></li><li><a href="#chi-sono">Chi sono</a></li><li><a href="#domande">Domande</a></li></ul>
+        <ul><li><a href="#metodo">Il metodo</a></li><li><a href="#esempio">Un esempio</a></li><li><a href="#chi-sono">Chi sono</a></li><li><a href="#domande">Domande</a></li><li><a href="/ops">Processi e operazioni</a></li></ul>
       </div>
       <div>
         <h3>Contatti</h3>
