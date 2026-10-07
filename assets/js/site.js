@@ -269,6 +269,11 @@
         const first = $('.fstep.on input', form) || $('.fstep.on legend', form);
         if (first) first.focus({ preventScroll: true });
       }
+      // on phones the new question can start above the screen: bring it back
+      if (focus) {
+        const top = form.getBoundingClientRect().top;
+        if (top < 70) window.scrollBy({ top: top - 90, behavior: reduce ? 'auto' : 'smooth' });
+      }
       if (cur === last) openCal();
     };
 

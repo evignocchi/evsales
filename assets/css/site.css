@@ -683,7 +683,7 @@ p { margin: 0; text-wrap: pretty; }
 
 .app--ops .app__body { grid-template-columns: 150px minmax(0, 1fr) minmax(0, 0.9fr); }
 .appnav { border-right: 1px solid #e7e8ec; padding: 12px 8px; display: grid; gap: 2px; align-content: start; font-size: 12.5px; }
-.appnav span { padding: 7px 10px; border-radius: 8px; color: var(--ink-2); display: flex; justify-content: space-between; }
+.appnav span { padding: 7px 10px; border-radius: 8px; color: var(--ink-2); display: flex; justify-content: space-between; gap: 8px; }
 .appnav span em { color: var(--muted); font-variant-numeric: tabular-nums; }
 .appnav .on { background: var(--pane); color: var(--ink); font-weight: 560; }
 .otable { padding: 12px; overflow-x: auto; }
@@ -698,3 +698,54 @@ p { margin: 0; text-wrap: pretty; }
   .appnav { border-right: 0; border-bottom: 1px solid #e7e8ec; display: flex; overflow-x: auto; }
   .appnav span { white-space: nowrap; }
 }
+
+/* ---------- Mobile pass ---------- */
+.app__body > * { min-width: 0; }
+.link { flex-wrap: wrap; }
+.map-list { display: none; }
+
+@media (max-width: 640px) {
+  :root { --t-display: clamp(2.05rem, 9.4vw, 2.6rem); --t-h2: clamp(1.9rem, 8.4vw, 2.4rem); --pad: 20px; --section: 88px; }
+  .hero h1 { max-width: none; }
+  .hero__main { gap: 22px; padding-bottom: 24px; }
+  .hero__lead { font-size: 1.05rem; }
+  .hero__cta { padding: 20px; }
+  .chip { min-height: 44px; padding: 0 16px; }
+  .chips { gap: 6px; }
+
+  /* comfortable touch targets */
+  .nav__in .btn--sm, .cookie__btns .btn { min-height: 44px; }
+  .link { min-height: 44px; }
+  .consent input { width: 22px; height: 22px; margin-top: 0; }
+  .back { min-height: 44px; }
+
+  /* the process map becomes a vertical list instead of a sideways scroll */
+  .map-wrap { display: none; }
+  .map-list { display: grid; margin: 8px 0 0; padding: 0; list-style: none; position: relative; }
+  .map-list li { position: relative; display: grid; gap: 2px; padding: 0 0 18px 28px; }
+  .map-list li::before { content: ""; position: absolute; left: 5px; top: 6px; width: 12px; height: 12px; border-radius: 50%; border: 1.6px solid var(--ink); background: var(--white); }
+  .map-list li:first-child::before, .map-list li:last-child::before { background: var(--ink); }
+  .map-list li:not(:last-child)::after { content: ""; position: absolute; left: 10.2px; top: 20px; bottom: 0; width: 1.6px; background: var(--ink); }
+  .map-list b { font-weight: 600; letter-spacing: -0.01em; }
+  .map-list span { color: var(--ink-2); font-size: 0.92rem; }
+  .map-list small { color: var(--muted); font-size: 0.8rem; padding-left: 28px; }
+
+  /* app mockups: readable text, nothing clipped */
+  .app__bar > span:last-child { display: none; }
+  .otable table { font-size: 12.5px; }
+  .otable th, .pill, .kind { font-size: 11.5px; }
+  .deal, .todo div { font-size: 12.5px; }
+  .search__hit { font-size: 13.5px; }
+
+  /* cheaper glass while scrolling on phones */
+  .frost__glass { -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .scene { height: 260vh; }
+
+  .about__photo { aspect-ratio: 1 / 1; }
+  .about__photo img { object-position: 50% 22%; }
+  .faq summary { padding: 20px 0; }
+  .faq .ans { padding-right: 0; }
+  .foot__top h2 { font-size: 1.75rem; }
+}
+.views { grid-template-columns: minmax(0, 1fr); }
+.case__demo, .case .vetrata > * { min-width: 0; }
